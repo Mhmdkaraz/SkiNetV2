@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Core.Specification {
     public class ProductSpecification : BaseSpecification<Product> {
-        public ProductSpecification(string? brand, string? type, string? sort) : base(x =>
-            (string.IsNullOrWhiteSpace(brand) || x.Brand == brand) &&
-            (string.IsNullOrWhiteSpace(type) || x.Type == type)
+        public ProductSpecification(ProductSpecParams specParams) : base(x =>
+            (specParams.Brands.Count == 0 || specParams.Brands.Contains(x.Brand)) &&
+            (specParams.Types.Count == 0 || specParams.Types.Contains(x.Type))
         ) {
-            switch (sort) {
+            switch (specParams.Sort) {
                 case "priceAsc":
                     AddOrderBy(x => x.Price); break;
                 case "priceDesc":
