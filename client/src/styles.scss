@@ -19,3 +19,7 @@ $customTheme: mat.define-theme();
     @apply rounded-md;
   }
 }
+
+.container {
+  @apply mx-auto;
+}
