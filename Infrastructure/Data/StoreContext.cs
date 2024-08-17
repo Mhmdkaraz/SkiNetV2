@@ -1,5 +1,6 @@
 ﻿using Core.Entities;
 using Infrastructure.Config;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Data {
-    public class StoreContext(DbContextOptions options) : DbContext(options) {
+    public class StoreContext(DbContextOptions options) : IdentityDbContext<AppUser>(options) {
         public DbSet<Product> Products { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
