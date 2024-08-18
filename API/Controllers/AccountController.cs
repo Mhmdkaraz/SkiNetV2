@@ -1,4 +1,5 @@
 ﻿using API.DTOs;
+using API.Extensions;
 using Core.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -30,8 +31,7 @@ namespace API.Controllers {
         [HttpGet("user-info")]
         public async Task<ActionResult> GetUserInfo() {
             if(User.Identity?.IsAuthenticated == false) return NoContent();
-            var user = await signInManager.UserManager.Users.FirstOrDefaultAsync(x => x.Email == User.FindFirstValue(ClaimTypes.Email));
-            if (user == null) return Unauthorized();
+            var user = await signInManager.UserManager.GetUserByEmail(User);
             return Ok(new {
                 user.FirstName,
                 user.LastName,
