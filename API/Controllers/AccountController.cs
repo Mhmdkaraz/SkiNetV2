@@ -45,7 +45,7 @@ namespace API.Controllers {
                 Address = user.Address?.ToDto(),
             });
         }
-        [HttpGet]
+        [HttpGet("auth-status")]
         public ActionResult GetAuthState() {
             return Ok(new {IsAuthecation = User.Identity?.IsAuthenticated ?? false});
         }
