@@ -17,28 +17,21 @@ export class AccountService {
     params = params.append('useCookies', true);
     return this.http.post<User>(this.baseUrl + 'login', values, {
       params,
-      withCredentials: true,
     });
   }
   register(values: any) {
     return this.http.post(this.baseUrl + 'account/register', values);
   }
   getUserInfo() {
-    return this.http
-      .get<User>(this.baseUrl + 'account/user-info', { withCredentials: true })
-      .pipe(
-        map((user) => {
-          this.currentUser.set(user);
-          return user;
-        })
-      );
+    return this.http.get<User>(this.baseUrl + 'account/user-info').pipe(
+      map((user) => {
+        this.currentUser.set(user);
+        return user;
+      })
+    );
   }
   logout() {
-    return this.http.post(
-      this.baseUrl + 'account/logout',
-      {},
-      { withCredentials: true }
-    );
+    return this.http.post(this.baseUrl + 'account/logout', {});
   }
   updateAddress(address: Address) {
     return this.http.post(this.baseUrl + 'account/address', address);
