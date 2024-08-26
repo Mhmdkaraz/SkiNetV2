@@ -1,5 +1,11 @@
-import { inject, Injectable } from '@angular/core';
-import { loadStripe, Stripe, StripeElements } from '@stripe/stripe-js';
+import { inject, Injectable, output } from '@angular/core';
+import {
+  loadStripe,
+  Stripe,
+  StripeAddressElement,
+  StripeAddressElementOptions,
+  StripeElements,
+} from '@stripe/stripe-js';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { CartService } from './cart.service';
@@ -15,12 +21,29 @@ export class StripeService {
   private http = inject(HttpClient);
   private stripePromise: Promise<Stripe | null>;
   private elements?: StripeElements;
+  private addressElement?: StripeAddressElement;
+
   constructor() {
     this.stripePromise = loadStripe(environment.stripePublicKey);
   }
 
   getStripeInstance() {
     return this.stripePromise;
+  }
+
+  async createAddressElement() {
+    if (!this.addressElement) {
+      const elements = await this.initializeElements();
+      if (elements) {
+        const options: StripeAddressElementOptions = {
+          mode: 'shipping',
+        };
+        this.addressElement = elements.create('address', options);
+      } else {
+        throw new Error('Elements instance has not been loaded');
+      }
+    }
+    return this.addressElement;
   }
 
   async initializeElements() {
