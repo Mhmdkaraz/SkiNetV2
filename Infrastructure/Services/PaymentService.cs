@@ -16,7 +16,7 @@ namespace Infrastructure.Services {
             }
             var shippingPrice = 0m;
             if (cart.DeliveryMethodId.HasValue) {
-                var deliveryMethod = await dmRepo.GetByIdAsync(cart.DeliveryMethodId.Value);
+                var deliveryMethod = await dmRepo.GetByIdAsync((int)cart.DeliveryMethodId);
                 if (deliveryMethod == null) return null;
                 shippingPrice = deliveryMethod.Price;
             }
