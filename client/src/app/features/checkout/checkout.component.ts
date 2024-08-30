@@ -24,6 +24,7 @@ import { CheckoutDeliveryComponent } from './checkout-delivery/checkout-delivery
 import { CheckoutReviewComponent } from './checkout-review/checkout-review.component';
 import { CartService } from '../../core/services/cart.service';
 import { CurrencyPipe } from '@angular/common';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-checkout',
@@ -37,6 +38,7 @@ import { CurrencyPipe } from '@angular/common';
     CheckoutDeliveryComponent,
     CheckoutReviewComponent,
     CurrencyPipe,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.scss',
@@ -56,6 +58,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     delivery: boolean;
   }>({ address: false, card: false, delivery: false });
   confirmationToken?: ConfirmationToken;
+  loading = false;
   // constructor() {
   //   this.handleAddressChange = this.handleAddressChange.bind(this);
   // }
@@ -121,6 +124,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     }
   }
   async confirmPayment(stepper: MatStepper) {
+    this.loading = true;
     try {
       if (this.confirmationToken) {
         const result = await this.stripeService.confirmPayment(
@@ -137,6 +141,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     } catch (error: any) {
       this.snackbar.error(error.message || 'Something went wrong');
       stepper.previous();
+    } finally {
+      this.loading = false;
     }
   }
   private async getAddressFromStripeAddress(): Promise<Address | null> {
